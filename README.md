@@ -1,5 +1,6 @@
 # TicketMania
 Event Ticket Booking System
+<<<<<<< HEAD
 
 TicketMania is a backend application where users can view events and book tickets, while admins can create and manage events.
 The system is built to handle real-world problems like overbooking, authentication, and performance.
@@ -23,3 +24,5 @@ TicketMania/
 ├── requirements.txt
 ├── .env.example
 └── README.md
+=======
+>>>>>>> 01da6bb139e93d45640adf3886545e4b4b68c8fe
