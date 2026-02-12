@@ -1,0 +1,69 @@
+# --------------------
+# Python
+# --------------------
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+.env
+.env.*
+*.egg-info/
+.eggs/
+dist/
+build/
+
+# --------------------
+# Virtual Environment
+# --------------------
+.env
+env/
+venv/
+.venv/
+env.bak/
+venv.bak/
+
+# --------------------
+# Logs
+# --------------------
+*.log
+
+# --------------------
+# OS Files
+# --------------------
+.DS_Store
+Thumbs.db
+
+# --------------------
+# IDE / Editor
+# --------------------
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# --------------------
+# Docker
+# --------------------
+postgres_data/
+docker-data/
+
+# --------------------
+# Database / Cache
+# --------------------
+*.sqlite3
+dump.rdb
+
+# --------------------
+# Test / Coverage
+# --------------------
+.coverage
+htmlcov/
+.pytest_cache/
+
+# --------------------
+# Temporary Files
+# --------------------
+*.tmp
+*.bak
+*.old
