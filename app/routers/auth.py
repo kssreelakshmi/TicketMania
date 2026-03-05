@@ -4,6 +4,7 @@ from app.schemas import UserCreate, UserLogin, UserResponse
 from app.models import User
 from app.utils.security import hash_password, verify_password, create_access_token
 from app.deps import get_db
+from fastapi.security import OAuth2PasswordRequestForm
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 
@@ -11,19 +12,25 @@ router = APIRouter(prefix="/auth", tags=["Authentication"])
 @router.post("/signup", response_model=UserResponse)
 def signup(user: UserCreate, db: Session = Depends(get_db)):
 
-    # Check if email exists
     existing_user = db.query(User).filter(User.email == user.email).first()
     if existing_user:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
+            status_code=400,
             detail="Email already registered"
         )
 
-    # Create user
+    try:
+        password_hash = hash_password(user.password)
+    except ValueError as e:
+        raise HTTPException(
+            status_code=400,
+            detail=str(e)
+        )
+
     new_user = User(
         name=user.name,
         email=user.email,
-        password_hash=hash_password(user.password),
+        password_hash=password_hash,
         role="user"
     )
 
@@ -35,20 +42,31 @@ def signup(user: UserCreate, db: Session = Depends(get_db)):
 
 
 @router.post("/login")
-def login(login_data: UserLogin, db: Session = Depends(get_db)):
+def login(
+    form_data: OAuth2PasswordRequestForm = Depends(),
+    db: Session = Depends(get_db)
+):
 
-    user = db.query(User).filter(User.email == login_data.email).first()
+    user = db.query(User).filter(User.email == form_data.username).first()
 
-    if not user or not verify_password(login_data.password, user.password_hash):
+    if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect email or password"
         )
 
-    access_token = create_access_token({
-        "user_id": user.id,
-        "role": user.role
-    })
+    if not verify_password(form_data.password, user.password_hash):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect email or password"
+        )
+
+    access_token = create_access_token(
+        data={
+            "user_id": user.id,
+            "role": user.role
+        }
+    )
 
     return {
         "access_token": access_token,

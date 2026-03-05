@@ -2,7 +2,9 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.routers import api_router
 from app.database import Base, engine
+from fastapi.security import OAuth2PasswordBearer
 
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
 def create_tables():
     """

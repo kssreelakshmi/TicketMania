@@ -8,9 +8,10 @@ class UserBase(BaseModel):
     email: EmailStr
 
 
-class UserCreate(UserBase):
-    password: str
-
+class UserCreate(BaseModel):
+    name: str
+    email: EmailStr
+    password: str = Field(min_length=8, max_length=64)
 
 class UserLogin(BaseModel):
     email: EmailStr
